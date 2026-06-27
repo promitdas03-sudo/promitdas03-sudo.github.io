@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ============================================================
+       PAGE TITLE — Edit this to change the browser tab title
+       ============================================================ -->
+  <title>Promit Das | Personal Website</title>
+
+  <!-- Tailwind CSS via CDN (no build step needed) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: DM Serif Display (hero name) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind custom config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif:  ['"DM Serif Display"', 'Georgia', 'serif'],
+            sans:   ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy:    '#0A0F1E',
+            card:    '#111827',
+            border:  '#1E293B',
+            muted:   '#94A3B8',
+            text:    '#E2E8F0',
+            teal:    '#2DD4BF',
+            sky:     '#38BDF8',
+            'teal-dim': '#0F4C46',
+            'sky-dim':  '#0C3550',
+          },
+          backgroundImage: {
+            'hero-grad': 'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45,212,191,0.12) 0%, transparent 70%)',
+            'card-grad': 'linear-gradient(135deg, rgba(45,212,191,0.06) 0%, rgba(56,189,248,0.04) 100%)',
+          },
+          animation: {
+            'fade-up':   'fadeUp 0.7s ease both',
+            'fade-in':   'fadeIn 0.6s ease both',
+            'helix':     'helix 8s linear infinite',
+            'pulse-dot': 'pulseDot 2s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeUp:   { from: { opacity:'0', transform:'translateY(22px)' }, to: { opacity:'1', transform:'translateY(0)' } },
+            fadeIn:   { from: { opacity:'0' }, to: { opacity:'1' } },
+            helix:    { from: { transform:'translateY(0)' }, to: { transform:'translateY(-50%)' } },
+            pulseDot: { '0%,100%': { boxShadow:'0 0 0 0 rgba(45,212,191,0.4)' }, '50%': { boxShadow:'0 0 0 8px rgba(45,212,191,0)' } },
+          },
+          boxShadow: {
+            'card':  '0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(30,41,59,0.8)',
+            'glow':  '0 0 24px rgba(45,212,191,0.15)',
+            'glow-lg':'0 0 48px rgba(45,212,191,0.2)',
+          },
+          backdropBlur: { xs: '4px' },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* ============================================================
+       BASE STYLES
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { background-color: #0A0F1E; }
+    body {
+      background-color: #0A0F1E;
+      color: #E2E8F0;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       HELIX BACKGROUND SVG ANIMATION
+       The DNA-like decorative element in the hero.
+       ============================================================ */
+    .helix-track { animation: helix 14s linear infinite; }
+    @keyframes helix {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+
+    /* ============================================================
+       GLASSMORPHISM CARD STYLE
+       ============================================================ */
+    .glass {
+      background: rgba(17, 24, 39, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(30, 41, 59, 0.8);
+    }
+
+    /* ============================================================
+       SECTION LABEL (small uppercase eyebrow text)
+       ============================================================ */
+    .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #2DD4BF;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       SKILL / INTEREST TAG
+       ============================================================ */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid rgba(45,212,191,0.25);
+      background: rgba(45,212,191,0.06);
+      color: #2DD4BF;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       PROGRESS BAR (for Currently Learning)
+       ============================================================ */
+    .prog-bar-bg {
+      height: 6px;
+      border-radius: 9999px;
+      background: rgba(30,41,59,0.9);
+      overflow: hidden;
+    }
+    .prog-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #2DD4BF, #38BDF8);
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+      width: 0;
+    }
+    .prog-bar-fill.animated { width: var(--pct); }
+
+    /* ============================================================
+       TIMELINE RAIL
+       ============================================================ */
+    .timeline-rail {
+      position: relative;
+    }
+    .timeline-rail::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, #2DD4BF 0%, #38BDF8 50%, rgba(56,189,248,0.1) 100%);
+    }
+    @media (min-width: 768px) {
+      .timeline-rail::before { left: 50%; transform: translateX(-50%); }
+    }
+
+    /* ============================================================
+       HOVER CARD LIFT
+       ============================================================ */
+    .card-hover {
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(45,212,191,0.4) !important;
+      box-shadow: 0 8px 32px rgba(45,212,191,0.1);
+    }
+
+    /* ============================================================
+       NAV LINK UNDERLINE
+       ============================================================ */
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      height: 1px; width: 0;
+      background: #2DD4BF;
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover { color: #2DD4BF; }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ============================================================
+       SCROLL REVEAL
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ============================================================
+       QUOTE CARD ACCENT LINE
+       ============================================================ */
+    .quote-card {
+      border-left: 3px solid #2DD4BF;
+    }
+
+    /* ============================================================
+       ACTIVE NAV STATE
+       ============================================================ */
+    .nav-link.active { color: #2DD4BF; }
+    .nav-link.active::after { width: 100%; }
+
+    /* ============================================================
+       MOBILE NAV DRAWER
+       ============================================================ */
+    #mobile-nav {
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    #mobile-nav.open { transform: translateX(0); }
+
+    /* Focus ring for accessibility */
+    :focus-visible { outline: 2px solid #2DD4BF; outline-offset: 3px; }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .card-hover, .prog-bar-fill { transition: none !important; }
+      .helix-track { animation: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================================================================
+     STICKY NAVIGATION BAR
+     Edit: change link text or add/remove nav items here
+     ================================================================ -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 border-b border-transparent transition-all duration-300" role="navigation" aria-label="Main navigation">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
+
+    <!-- Logo / Name — Edit this -->
+    <a href="#home" class="font-serif text-lg text-teal tracking-tight shrink-0">PD<span class="text-sky">.</span></a>
+
+    <!-- Desktop nav links -->
+    <div class="hidden xl:flex items-center gap-5 text-xs font-medium text-muted">
+      <!-- Edit href="#section-id" to match your section IDs -->
+      <a href="#home"         class="nav-link">Home</a>
+      <a href="#about"        class="nav-link">About</a>
+      <a href="#academic"     class="nav-link">Academic Journey</a>
+      <a href="#research"     class="nav-link">Research</a>
+      <a href="#learning"     class="nav-link">Learning</a>
+      <a href="#projects"     class="nav-link">Projects</a>
+      <a href="#leadership"   class="nav-link">Leadership</a>
+      <a href="#interests"    class="nav-link">Interests</a>
+      <a href="#philosophy"   class="nav-link">Philosophy</a>
+      <a href="#vision"       class="nav-link">Vision</a>
+      <a href="#blog"         class="nav-link">Blog</a>
+      <a href="#contact"      class="nav-link px-3 py-1.5 rounded-md border border-border text-text hover:border-teal hover:text-teal transition-colors">Contact</a>
+    </div>
+
+    <!-- Mobile hamburger button -->
+    <button id="menu-btn" aria-label="Open menu" aria-expanded="false"
+            class="xl:hidden p-2 rounded-md border border-border text-muted hover:text-teal hover:border-teal transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ================================================================
+     MOBILE NAV DRAWER
+     ================================================================ -->
+<div id="mobile-nav" class="fixed inset-y-0 right-0 z-50 w-72 bg-card border-l border-border shadow-2xl xl:hidden" aria-hidden="true">
+  <div class="flex items-center justify-between px-6 h-14 border-b border-border">
+    <span class="font-serif text-teal text-lg">Menu</span>
+    <button id="close-btn" aria-label="Close menu" class="p-2 text-muted hover:text-teal transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  <nav class="flex flex-col px-6 py-6 gap-4 text-sm font-medium text-muted" role="navigation">
+    <a href="#home"       class="nav-link mobile-nav-link">Home</a>
+    <a href="#about"      class="nav-link mobile-nav-link">About</a>
+    <a href="#academic"   class="nav-link mobile-nav-link">Academic Journey</a>
+    <a href="#research"   class="nav-link mobile-nav-link">Research Interests</a>
+    <a href="#learning"   class="nav-link mobile-nav-link">Currently Learning</a>
+    <a href="#projects"   class="nav-link mobile-nav-link">Projects</a>
+    <a href="#leadership" class="nav-link mobile-nav-link">Leadership</a>
+    <a href="#interests"  class="nav-link mobile-nav-link">Interests</a>
+    <a href="#philosophy" class="nav-link mobile-nav-link">Philosophy</a>
+    <a href="#vision"     class="nav-link mobile-nav-link">Vision</a>
+    <a href="#blog"       class="nav-link mobile-nav-link">Blog</a>
+    <a href="#contact"    class="nav-link mobile-nav-link">Contact</a>
+  </nav>
+</div>
+<div id="mobile-overlay" class="fixed inset-0 z-40 bg-black/60 hidden xl:hidden"></div>
+
+
+<!-- ================================================================
+     HERO SECTION
+     Edit: profile image URL, name, subtitle, mission statement
+     ================================================================ -->
+<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-14">
+
+  <!-- Ambient background gradient -->
+  <div class="absolute inset-0 bg-hero-grad pointer-events-none"></div>
+
+  <!-- Decorative helix SVG (biological theme — signature element) -->
+  <div class="absolute right-0 top-0 bottom-0 w-40 md:w-64 opacity-[0.07] overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="helix-track" style="height:200%">
+      <svg viewBox="0 0 80 800" xmlns="http://www.w3.org/2000/svg" class="w-full">
+        <defs>
+          <linearGradient id="hg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#2DD4BF"/>
+            <stop offset="100%" stop-color="#38BDF8"/>
+          </linearGradient>
+        </defs>
+        <!-- Helix strand 1 -->
+        <path d="M40 0 C80 40 0 80 40 120 C80 160 0 200 40 240 C80 280 0 320 40 360 C80 400 0 440 40 480 C80 520 0 560 40 600 C80 640 0 680 40 720 C80 760 0 800 40 800"
+              fill="none" stroke="url(#hg)" stroke-width="2"/>
+        <!-- Helix strand 2 -->
+        <path d="M40 0 C0 40 80 80 40 120 C0 160 80 200 40 240 C0 280 80 320 40 360 C0 400 80 440 40 480 C0 520 80 560 40 600 C0 640 80 680 40 720 C0 760 80 800 40 800"
+              fill="none" stroke="url(#hg)" stroke-width="2"/>
+        <!-- Cross-bridge rungs -->
+        <line x1="40" y1="0"   x2="40" y2="0"   stroke="#38BDF8" stroke-width="1.5"/>
+        <line x1="20" y1="20"  x2="60" y2="20"  stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="60"  x2="20" y2="60"  stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="100" x2="60" y2="100" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="140" x2="20" y2="140" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="180" x2="60" y2="180" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="220" x2="20" y2="220" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="260" x2="60" y2="260" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="300" x2="20" y2="300" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="340" x2="60" y2="340" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="380" x2="20" y2="380" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="420" x2="60" y2="420" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="460" x2="20" y2="460" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="500" x2="60" y2="500" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="540" x2="20" y2="540" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="580" x2="60" y2="580" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="620" x2="20" y2="620" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="660" x2="60" y2="660" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="700" x2="20" y2="700" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="740" x2="60" y2="740" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="780" x2="20" y2="780" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <!-- Repeat for seamless loop -->
+      <svg viewBox="0 0 80 800" xmlns="http://www.w3.org/2000/svg" class="w-full">
+        <path d="M40 0 C80 40 0 80 40 120 C80 160 0 200 40 240 C80 280 0 320 40 360 C80 400 0 440 40 480 C80 520 0 560 40 600 C80 640 0 680 40 720 C80 760 0 800 40 800"
+              fill="none" stroke="url(#hg)" stroke-width="2"/>
+        <path d="M40 0 C0 40 80 80 40 120 C0 160 80 200 40 240 C0 280 80 320 40 360 C0 400 80 440 40 480 C0 520 80 560 40 600 C0 640 80 680 40 720 C0 760 80 800 40 800"
+              fill="none" stroke="url(#hg)" stroke-width="2"/>
+        <line x1="20" y1="20"  x2="60" y2="20"  stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="60"  x2="20" y2="60"  stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="100" x2="60" y2="100" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="140" x2="20" y2="140" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="180" x2="60" y2="180" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="220" x2="20" y2="220" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="260" x2="60" y2="260" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="300" x2="20" y2="300" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="340" x2="60" y2="340" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="380" x2="20" y2="380" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="420" x2="60" y2="420" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="460" x2="20" y2="460" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="500" x2="60" y2="500" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="540" x2="20" y2="540" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="580" x2="60" y2="580" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="620" x2="20" y2="620" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="660" x2="60" y2="660" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="700" x2="20" y2="700" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+        <line x1="20" y1="740" x2="60" y2="740" stroke="#38BDF8" stroke-width="1.5" opacity="0.7"/>
+        <line x1="60" y1="780" x2="20" y2="780" stroke="#2DD4BF" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Hero content -->
+  <div class="relative z-10 max-w-4xl mx-auto px-6 text-center py-20">
+
+    <!-- ============================================================
+         PROFILE PHOTO
+         Replace "YOUR_PHOTO_URL_HERE" with your actual image URL
+         e.g.: src="assets/profile.jpg"
+         ============================================================ -->
+    <div class="flex justify-center mb-8">
+      <div class="relative">
+        <!-- Outer glow ring -->
+        <div class="absolute -inset-1 rounded-full bg-gradient-to-tr from-teal to-sky opacity-40 blur-sm"></div>
+        <img
+          src="https://placehold.co/160x160/111827/2DD4BF?text=PD"
+          alt="Promit Das — profile photo"
+          class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-teal/40 shadow-glow"
+          style="animation: fadeIn 0.8s ease both;"
+        />
+        <!-- Online / active dot -->
+        <span class="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-teal border-2 border-navy"
+              style="animation: pulseDot 2s ease-in-out infinite;" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         NAME — Edit: change "Promit Das"
+         ============================================================ -->
+    <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl text-text leading-tight mb-4"
+        style="animation: fadeUp 0.7s ease 0.1s both;">
+      Promit Das
+    </h1>
+
+    <!-- ============================================================
+         SUBTITLE — Edit this line
+         ============================================================ -->
+    <p class="text-teal font-medium text-sm sm:text-base tracking-wide mb-5"
+       style="animation: fadeUp 0.7s ease 0.2s both;">
+      Animal Science Student &nbsp;·&nbsp; Aspiring Animal Geneticist &amp; Computational Biologist
+    </p>
+
+    <!-- ============================================================
+         MISSION STATEMENT — Edit this paragraph
+         ============================================================ -->
+    <p class="text-muted text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-10"
+       style="animation: fadeUp 0.7s ease 0.3s both;">
+      Building a career at the intersection of animal genetics, computational biology, and
+      sustainable livestock research.
+    </p>
+
+    <!-- ============================================================
+         CTA BUTTONS
+         Edit: Update the CV href to your actual CV URL
+         ============================================================ -->
+    <div class="flex flex-wrap gap-3 justify-center" style="animation: fadeUp 0.7s ease 0.4s both;">
+      <!-- Replace "#" with your actual CV download URL -->
+      <a href="#" class="px-6 py-3 rounded-lg bg-teal text-navy font-semibold text-sm hover:bg-teal/90 transition-colors shadow-glow">
+        Download CV
+      </a>
+      <a href="#academic" class="px-6 py-3 rounded-lg border border-border text-text font-medium text-sm hover:border-teal hover:text-teal transition-colors">
+        Explore My Journey
+      </a>
+      <a href="#contact" class="px-6 py-3 rounded-lg border border-border text-text font-medium text-sm hover:border-sky hover:text-sky transition-colors">
+        Contact Me
+      </a>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="mt-16 flex flex-col items-center gap-1 text-muted" style="animation: fadeIn 1s ease 0.8s both;">
+      <span class="text-xs tracking-widest uppercase font-medium">Scroll</span>
+      <svg class="w-4 h-4 animate-bounce mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     QUICK FACTS STRIP
+     Edit: change facts below
+     ================================================================ -->
+<div class="border-y border-border bg-card/40 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
+      <!-- Edit each fact here -->
+      <div class="reveal">
+        <p class="text-teal font-semibold text-lg">B.Sc.</p>
+        <p class="text-muted text-xs mt-1">Animal Science</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.05s">
+        <p class="text-sky font-semibold text-lg">CR</p>
+        <p class="text-muted text-xs mt-1">Class Representative</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.1s">
+        <p class="text-teal font-semibold text-lg">9+</p>
+        <p class="text-muted text-xs mt-1">Research Interests</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s">
+        <p class="text-sky font-semibold text-lg">3</p>
+        <p class="text-muted text-xs mt-1">Active Projects</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.2s">
+        <p class="text-teal font-semibold text-lg">7+</p>
+        <p class="text-muted text-xs mt-1">Skills in Progress</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.25s">
+        <p class="text-sky font-semibold text-lg">∞</p>
+        <p class="text-muted text-xs mt-1">Curiosity</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     ABOUT ME SECTION
+     Edit: update the biography paragraphs below
+     ================================================================ -->
+<section id="about" class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+      <!-- Text column -->
+      <div class="reveal">
+        <p class="eyebrow mb-4">Who I Am</p>
+        <h2 class="font-serif text-3xl sm:text-4xl text-text leading-snug mb-6">
+          About Me
+        </h2>
+        <!-- ============================================================
+             BIOGRAPHY — Edit this text
+             ============================================================ -->
+        <div class="space-y-4 text-muted leading-relaxed text-[0.95rem]">
+          <p>
+            I am an undergraduate student of Animal Science with a growing interest in animal genetics,
+            bioinformatics, and data-driven livestock research. I am currently building skills in
+            programming, computational biology, and scientific research with the long-term goal of
+            pursuing graduate studies and contributing to sustainable animal breeding and genetics.
+          </p>
+          <p>
+            My academic path has been shaped by a genuine curiosity about the genetic underpinnings
+            of animal traits and the ways computational tools can accelerate scientific discovery.
+            I believe the most impactful research lives at the crossroads of disciplines — and I am
+            working every day to stand confidently at that crossroads.
+          </p>
+          <p>
+            Beyond the laboratory and the terminal window, I am an avid reader, a wildlife enthusiast,
+            and someone who finds creative expression through drawing, photography, and music.
+          </p>
+        </div>
+
+        <!-- Personal motto -->
+        <div class="mt-8 inline-block px-4 py-2 rounded-md border border-teal/25 bg-teal/5 text-teal text-sm font-medium italic">
+          "Stay curious. Stay disciplined. Build something meaningful."
+        </div>
+      </div>
+
+      <!-- Cards column: Now Page + Current Focus -->
+      <div class="space-y-5">
+
+        <!-- NOW PAGE -->
+        <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.1s">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-base" aria-hidden="true">📍</span>
+            <h3 class="font-semibold text-text text-sm">Right Now</h3>
+          </div>
+          <!-- Edit these bullet points -->
+          <ul class="space-y-2 text-muted text-sm">
+            <li class="flex gap-2"><span class="text-teal mt-0.5">→</span> Studying Animal Science at undergraduate level</li>
+            <li class="flex gap-2"><span class="text-teal mt-0.5">→</span> Exploring computational biology and bioinformatics</li>
+            <li class="flex gap-2"><span class="text-teal mt-0.5">→</span> Building this personal website on GitHub Pages</li>
+            <li class="flex gap-2"><span class="text-teal mt-0.5">→</span> Preparing for future research and graduate studies</li>
+          </ul>
+        </div>
+
+        <!-- CURRENT FOCUS -->
+        <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.15s">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-sky/10 border border-sky/20 flex items-center justify-center text-sky text-base" aria-hidden="true">🎯</span>
+            <h3 class="font-semibold text-text text-sm">Current Focus</h3>
+          </div>
+          <!-- Edit these bullet points -->
+          <ul class="space-y-2 text-muted text-sm">
+            <li class="flex gap-2"><span class="text-sky mt-0.5">→</span> Strengthening my academic foundation</li>
+            <li class="flex gap-2"><span class="text-sky mt-0.5">→</span> Learning Python, R, and Linux from scratch</li>
+            <li class="flex gap-2"><span class="text-sky mt-0.5">→</span> Building research skills and scientific writing abilities</li>
+            <li class="flex gap-2"><span class="text-sky mt-0.5">→</span> Developing computational thinking for bioinformatics</li>
+            <li class="flex gap-2"><span class="text-sky mt-0.5">→</span> Creating an academic portfolio and professional presence</li>
+          </ul>
+        </div>
+
+        <!-- QUICK FACTS -->
+        <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.2s">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-8 rounded-lg bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-base" aria-hidden="true">⚡</span>
+            <h3 class="font-semibold text-text text-sm">Quick Facts</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <!-- Edit these tags -->
+            <span class="chip">Undergraduate Student</span>
+            <span class="chip">Aspiring Geneticist</span>
+            <span class="chip">Bioinformatics Learner</span>
+            <span class="chip">Sustainable Livestock</span>
+            <span class="chip">Research Aspirant</span>
+            <span class="chip">Class Representative</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     ACADEMIC JOURNEY SECTION (Timeline)
+     Edit: add/remove timeline cards, update institution details
+     ================================================================ -->
+<section id="academic" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <p class="eyebrow mb-3">Where I've Been &amp; Where I'm Going</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Academic Journey</h2>
+    </div>
+
+    <!-- Academic details bar -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+      <!-- Edit: replace placeholder text with your actual university/dept info -->
+      <div class="reveal glass rounded-xl p-5 text-center card-hover">
+        <p class="text-teal text-xs font-semibold uppercase tracking-wider mb-1">University</p>
+        <!-- EDIT: Replace with your university name -->
+        <p class="text-text font-medium text-sm">Your University Name</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.05s">
+        <p class="text-teal text-xs font-semibold uppercase tracking-wider mb-1">Department</p>
+        <!-- EDIT: Replace with your department -->
+        <p class="text-text font-medium text-sm">Department of Animal Science</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.1s">
+        <p class="text-sky text-xs font-semibold uppercase tracking-wider mb-1">Current Semester</p>
+        <!-- EDIT: Replace with your current semester -->
+        <p class="text-text font-medium text-sm">— th Semester</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.15s">
+        <p class="text-sky text-xs font-semibold uppercase tracking-wider mb-1">Current CGPA</p>
+        <!-- EDIT: Replace with your CGPA -->
+        <p class="text-text font-medium text-sm">—.—— / 4.00</p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="relative timeline-rail space-y-0">
+
+      <!-- TIMELINE ITEM 1 — Edit this card -->
+      <div class="reveal relative flex flex-col md:flex-row items-start md:items-center gap-6 pb-12 pl-14 md:pl-0">
+        <!-- Dot -->
+        <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-teal border-4 border-navy shadow-glow z-10 top-0"
+             style="animation: pulseDot 2s ease-in-out infinite;" aria-hidden="true"></div>
+        <!-- Card — left side on desktop -->
+        <div class="md:w-1/2 md:pr-12 md:text-right">
+          <div class="glass rounded-xl p-5 card-hover text-left md:text-right">
+            <span class="chip inline-block mb-3">Foundation Phase</span>
+            <h3 class="text-text font-semibold text-base mb-2">Exploring Research Interests</h3>
+            <p class="text-muted text-sm leading-relaxed">
+              Discovering the breadth of animal science — from physiology and nutrition to genetics
+              and breeding — and identifying the areas that ignite deepest curiosity.
+            </p>
+          </div>
+        </div>
+        <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+      </div>
+
+      <!-- TIMELINE ITEM 2 -->
+      <div class="reveal relative flex flex-col md:flex-row items-start md:items-center gap-6 pb-12 pl-14 md:pl-0" style="transition-delay:0.1s">
+        <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-sky border-4 border-navy z-10 top-0" aria-hidden="true"></div>
+        <div class="md:w-1/2 hidden md:block"></div>
+        <div class="md:w-1/2 md:pl-12">
+          <div class="glass rounded-xl p-5 card-hover">
+            <span class="chip inline-block mb-3" style="border-color:rgba(56,189,248,0.25);background:rgba(56,189,248,0.06);color:#38BDF8;">In Progress</span>
+            <h3 class="text-text font-semibold text-base mb-2">Learning Computational Tools</h3>
+            <p class="text-muted text-sm leading-relaxed">
+              Building proficiency in R, Python, and Linux. Learning bioinformatics pipelines,
+              statistical analysis, and data visualization to bridge biology and computation.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIMELINE ITEM 3 -->
+      <div class="reveal relative flex flex-col md:flex-row items-start md:items-center gap-6 pb-12 pl-14 md:pl-0" style="transition-delay:0.2s">
+        <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full bg-teal border-4 border-navy z-10 top-0" aria-hidden="true"></div>
+        <div class="md:w-1/2 md:pr-12 md:text-right">
+          <div class="glass rounded-xl p-5 card-hover text-left md:text-right">
+            <span class="chip inline-block mb-3">Upcoming</span>
+            <h3 class="text-text font-semibold text-base mb-2">Conducting Undergraduate Research</h3>
+            <p class="text-muted text-sm leading-relaxed">
+              Applying classroom knowledge and computational skills to real research questions
+              in animal genetics, contributing to the scientific literature for the first time.
+            </p>
+          </div>
+        </div>
+        <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+      </div>
+
+      <!-- TIMELINE ITEM 4 -->
+      <div class="reveal relative flex flex-col md:flex-row items-start md:items-center gap-6 pb-0 pl-14 md:pl-0" style="transition-delay:0.3s">
+        <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 w-6 h-6 rounded-full border-4 border-sky bg-navy z-10 top-0" aria-hidden="true"></div>
+        <div class="md:w-1/2 hidden md:block"></div>
+        <div class="md:w-1/2 md:pl-12">
+          <div class="glass rounded-xl p-5 card-hover border border-sky/20">
+            <span class="chip inline-block mb-3" style="border-color:rgba(56,189,248,0.25);background:rgba(56,189,248,0.06);color:#38BDF8;">Long-term</span>
+            <h3 class="text-text font-semibold text-base mb-2">Graduate Studies &amp; International Career</h3>
+            <p class="text-muted text-sm leading-relaxed">
+              Pursuing a PhD or master's degree in animal genetics or computational biology at a
+              leading international institution and contributing to globally impactful research.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     RESEARCH INTERESTS SECTION
+     Edit: add/remove research interest cards below
+     ================================================================ -->
+<section id="research" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">What Drives My Work</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Research Interests</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- RESEARCH INTEREST CARDS — Edit icon, title, and description for each -->
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.05s">
+        <div class="text-3xl mb-4" aria-hidden="true">🧬</div>
+        <h3 class="text-text font-semibold mb-2">Animal Genetics</h3>
+        <p class="text-muted text-sm leading-relaxed">Understanding hereditary mechanisms, gene expression, and genetic variation in livestock and companion animals.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.1s">
+        <div class="text-3xl mb-4" aria-hidden="true">🔬</div>
+        <h3 class="text-text font-semibold mb-2">Genomics</h3>
+        <p class="text-muted text-sm leading-relaxed">Exploring whole-genome sequencing, SNP analysis, and population genomics to characterize genetic diversity in animal populations.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.15s">
+        <div class="text-3xl mb-4" aria-hidden="true">💻</div>
+        <h3 class="text-text font-semibold mb-2">Computational Biology</h3>
+        <p class="text-muted text-sm leading-relaxed">Applying algorithms and computational models to decode complex biological systems and large-scale genomic datasets.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.2s">
+        <div class="text-3xl mb-4" aria-hidden="true">📊</div>
+        <h3 class="text-text font-semibold mb-2">Bioinformatics</h3>
+        <p class="text-muted text-sm leading-relaxed">Developing and using bioinformatics pipelines for sequence alignment, variant calling, and functional annotation.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.25s">
+        <div class="text-3xl mb-4" aria-hidden="true">🐄</div>
+        <h3 class="text-text font-semibold mb-2">Animal Breeding</h3>
+        <p class="text-muted text-sm leading-relaxed">Studying selection strategies, breeding programs, and marker-assisted selection for improved livestock performance.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.3s">
+        <div class="text-3xl mb-4" aria-hidden="true">📐</div>
+        <h3 class="text-text font-semibold mb-2">Quantitative Genetics</h3>
+        <p class="text-muted text-sm leading-relaxed">Investigating the genetic architecture of complex traits using heritability estimation, BLUP models, and GWAS approaches.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.35s">
+        <div class="text-3xl mb-4" aria-hidden="true">🌱</div>
+        <h3 class="text-text font-semibold mb-2">Sustainable Livestock Production</h3>
+        <p class="text-muted text-sm leading-relaxed">Exploring genetic and management strategies that improve productivity while reducing the environmental footprint of animal agriculture.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.4s">
+        <div class="text-3xl mb-4" aria-hidden="true">📡</div>
+        <h3 class="text-text font-semibold mb-2">Precision Livestock Farming</h3>
+        <p class="text-muted text-sm leading-relaxed">Using sensors, data analytics, and AI to monitor individual animal health, behaviour, and productivity in real time.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.45s">
+        <div class="text-3xl mb-4" aria-hidden="true">📈</div>
+        <h3 class="text-text font-semibold mb-2">Data Science in Animal Science</h3>
+        <p class="text-muted text-sm leading-relaxed">Applying machine learning and statistical modelling to predict phenotypic outcomes, disease risk, and genetic merit from biological data.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     CURRENTLY LEARNING SECTION (Progress Bars)
+     Edit: skill names and percentage values (0–100)
+     ================================================================ -->
+<section id="learning" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Skills in Progress</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Currently Learning</h2>
+      <p class="text-muted text-sm mt-3 max-w-xl mx-auto">A transparent view of where I am — not where I pretend to be. Progress is honest.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+      <!-- SKILL CARD — Edit: name, description, and data-pct (0-100) -->
+      <div class="reveal glass rounded-xl p-6 card-hover">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">📊</span> R Programming
+          </span>
+          <span class="text-teal text-xs font-medium prog-label">30%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">Statistical computing and data visualization for biological research.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="30%" style="--pct:30%"></div></div>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.05s">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">🐍</span> Python
+          </span>
+          <span class="text-teal text-xs font-medium">25%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">General-purpose programming for data analysis and bioinformatics pipelines.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="25%" style="--pct:25%"></div></div>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.1s">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">🐧</span> Linux
+          </span>
+          <span class="text-teal text-xs font-medium">20%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">Command-line proficiency for running bioinformatics tools on servers.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="20%" style="--pct:20%"></div></div>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.15s">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">🔍</span> Research Methodology
+          </span>
+          <span class="text-sky text-xs font-medium">45%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">Study design, literature review, hypothesis formation, and academic rigor.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="45%" style="--pct:45%;background:linear-gradient(90deg,#38BDF8,#2DD4BF)"></div></div>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.2s">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">✍️</span> Scientific Writing
+          </span>
+          <span class="text-sky text-xs font-medium">40%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">Structuring papers, abstracts, and academic reports with clarity and precision.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="40%" style="--pct:40%;background:linear-gradient(90deg,#38BDF8,#2DD4BF)"></div></div>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.25s">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">📉</span> Data Analysis
+          </span>
+          <span class="text-teal text-xs font-medium">35%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">Exploratory and inferential statistics applied to biological and experimental datasets.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="35%" style="--pct:35%"></div></div>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover sm:col-span-2" style="transition-delay:0.3s">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-text font-semibold text-sm flex items-center gap-2">
+            <span aria-hidden="true">🔬</span> Bioinformatics Fundamentals
+          </span>
+          <span class="text-teal text-xs font-medium">20%</span>
+        </div>
+        <p class="text-muted text-xs mb-3">Sequence alignment, BLAST, basic genomics workflows, and understanding databases like NCBI and UniProt.</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" data-pct="20%" style="--pct:20%"></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     PROJECTS SECTION
+     Edit: update project titles, descriptions, and tags
+     ================================================================ -->
+<section id="projects" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">What I'm Building</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Projects</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- PROJECT CARD 1 — Edit this -->
+      <div class="reveal glass rounded-xl p-6 card-hover flex flex-col">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-3xl" aria-hidden="true">🌐</span>
+          <span class="chip text-xs">Active</span>
+        </div>
+        <h3 class="text-text font-semibold mb-2">Personal Website Development</h3>
+        <p class="text-muted text-sm leading-relaxed flex-1 mb-5">
+          Building a professional academic website using GitHub Pages and AI-assisted web design.
+          A digital identity that grows alongside my career.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mt-auto">
+          <span class="chip text-xs">HTML</span>
+          <span class="chip text-xs">Tailwind CSS</span>
+          <span class="chip text-xs">GitHub Pages</span>
+        </div>
+      </div>
+
+      <!-- PROJECT CARD 2 -->
+      <div class="reveal glass rounded-xl p-6 card-hover flex flex-col" style="transition-delay:0.1s">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-3xl" aria-hidden="true">🧪</span>
+          <span class="chip text-xs">In Progress</span>
+        </div>
+        <h3 class="text-text font-semibold mb-2">Computational Biology Learning Journey</h3>
+        <p class="text-muted text-sm leading-relaxed flex-1 mb-5">
+          Documenting the transition from traditional animal science studies into programming and
+          bioinformatics — resources, challenges, and milestones shared openly.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mt-auto">
+          <span class="chip text-xs">Python</span>
+          <span class="chip text-xs">R</span>
+          <span class="chip text-xs">Bioinformatics</span>
+        </div>
+      </div>
+
+      <!-- PROJECT CARD 3 -->
+      <div class="reveal glass rounded-xl p-6 card-hover flex flex-col" style="transition-delay:0.2s">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-3xl" aria-hidden="true">🗺️</span>
+          <span class="chip text-xs" style="border-color:rgba(56,189,248,0.25);background:rgba(56,189,248,0.06);color:#38BDF8;">Planning</span>
+        </div>
+        <h3 class="text-text font-semibold mb-2">Research Preparation Roadmap</h3>
+        <p class="text-muted text-sm leading-relaxed flex-1 mb-5">
+          Developing the skills, portfolio, and academic credentials required for graduate research
+          and international scholarships in animal genetics and computational biology.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mt-auto">
+          <span class="chip text-xs">Research Skills</span>
+          <span class="chip text-xs">Scientific Writing</span>
+          <span class="chip text-xs">Graduate Prep</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     LEADERSHIP SECTION
+     Edit: update title, role, and responsibilities
+     ================================================================ -->
+<section id="leadership" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Beyond the Classroom</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Leadership</h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto reveal">
+      <div class="glass rounded-xl p-8 card-hover border border-teal/15">
+        <div class="flex items-start gap-5">
+          <div class="w-14 h-14 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-2xl shrink-0" aria-hidden="true">
+            🎓
+          </div>
+          <div>
+            <!-- Edit: role title -->
+            <h3 class="text-text font-semibold text-xl mb-1">Class Representative (CR)</h3>
+            <!-- Edit: institution and duration -->
+            <p class="text-teal text-sm mb-5">Department of Animal Science &nbsp;·&nbsp; Ongoing</p>
+            <!-- Edit: responsibilities -->
+            <ul class="space-y-3 text-muted text-sm">
+              <li class="flex items-start gap-3">
+                <span class="text-teal mt-0.5 shrink-0">✓</span>
+                Coordinating communication between faculty and students to ensure academic
+                information flows clearly and efficiently across the class.
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-teal mt-0.5 shrink-0">✓</span>
+                Managing academic activities, class schedules, and shared resources to support
+                a productive learning environment for all students.
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-teal mt-0.5 shrink-0">✓</span>
+                Developing leadership, organizational, and interpersonal skills through practical
+                responsibility and accountability to peers and faculty alike.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     PERSONAL INTERESTS SECTION
+     Edit: change emoji icons and interest labels
+     ================================================================ -->
+<section id="interests" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Life Beyond Science</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Personal Interests</h2>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <!-- INTEREST CARDS — Edit emoji and label for each -->
+      <div class="reveal glass rounded-xl p-5 text-center card-hover">
+        <div class="text-3xl mb-3" aria-hidden="true">📚</div>
+        <p class="text-text text-sm font-medium">Reading</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.05s">
+        <div class="text-3xl mb-3" aria-hidden="true">🎵</div>
+        <p class="text-text text-sm font-medium">Music</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.1s">
+        <div class="text-3xl mb-3" aria-hidden="true">✏️</div>
+        <p class="text-text text-sm font-medium">Drawing</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.15s">
+        <div class="text-3xl mb-3" aria-hidden="true">🎬</div>
+        <p class="text-text text-sm font-medium">Movies</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.2s">
+        <div class="text-3xl mb-3" aria-hidden="true">📷</div>
+        <p class="text-text text-sm font-medium">Photography</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.25s">
+        <div class="text-3xl mb-3" aria-hidden="true">🎥</div>
+        <p class="text-text text-sm font-medium">Videography</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.3s">
+        <div class="text-3xl mb-3" aria-hidden="true">🦁</div>
+        <p class="text-text text-sm font-medium">Wildlife</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.35s">
+        <div class="text-3xl mb-3" aria-hidden="true">🏃</div>
+        <p class="text-text text-sm font-medium">Fitness</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.4s">
+        <div class="text-3xl mb-3" aria-hidden="true">🌍</div>
+        <p class="text-text text-sm font-medium">Traveling</p>
+      </div>
+      <div class="reveal glass rounded-xl p-5 text-center card-hover" style="transition-delay:0.45s">
+        <div class="text-3xl mb-3" aria-hidden="true">🔭</div>
+        <p class="text-text text-sm font-medium">Academic Research</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     PHILOSOPHY SECTION
+     Edit: update the quote and supporting text
+     ================================================================ -->
+<section id="philosophy" class="py-24 border-t border-border">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">How I Think</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Philosophy</h2>
+    </div>
+
+    <div class="reveal">
+      <!-- QUOTE CARD — Edit the quote and attribution -->
+      <div class="glass rounded-xl p-8 sm:p-12 quote-card mb-8">
+        <svg class="w-10 h-10 text-teal/30 mb-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <!-- Edit: the main philosophy quote -->
+        <blockquote class="font-serif text-2xl sm:text-3xl text-text leading-relaxed mb-6 italic">
+          Discipline compounds. Small daily improvements, consistency, and purposeful work can
+          transform both careers and lives.
+        </blockquote>
+        <!-- Edit: attribution or supporting description -->
+        <p class="text-muted text-sm leading-relaxed">
+          This mindset is inspired by a disciplined, growth-oriented approach to life — the belief
+          that excellence is not a single act but a habit cultivated through deliberate, daily effort.
+          I return to this idea whenever the progress seems slow and the destination feels distant.
+        </p>
+      </div>
+
+      <!-- Supporting value chips -->
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="chip">Growth Mindset</span>
+        <span class="chip">Intellectual Curiosity</span>
+        <span class="chip">Long-term Thinking</span>
+        <span class="chip">Consistency Over Intensity</span>
+        <span class="chip">Purposeful Work</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     VISION SECTION
+     Edit: update the vision statement
+     ================================================================ -->
+<section id="vision" class="py-24 border-t border-border">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Where I Am Going</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Future Vision</h2>
+    </div>
+
+    <div class="reveal">
+      <div class="glass rounded-xl p-8 sm:p-12 text-center border border-sky/15"
+           style="background: linear-gradient(135deg, rgba(45,212,191,0.04) 0%, rgba(56,189,248,0.04) 100%);">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-teal/20 to-sky/20 border border-sky/20 flex items-center justify-center text-3xl mx-auto mb-8" aria-hidden="true">
+          🚀
+        </div>
+        <!-- Edit: the vision statement -->
+        <p class="text-text text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl mx-auto font-light">
+          My long-term vision is to contribute to animal genetics research and develop computational
+          approaches that improve livestock productivity and sustainability — while pursuing advanced
+          studies and building an internationally impactful scientific career.
+        </p>
+        <div class="grid sm:grid-cols-3 gap-4 text-left">
+          <div class="glass rounded-lg p-4">
+            <p class="text-teal text-xs font-semibold uppercase tracking-wider mb-1">Research</p>
+            <p class="text-muted text-sm">Publish original findings in animal genetics and computational biology.</p>
+          </div>
+          <div class="glass rounded-lg p-4">
+            <p class="text-sky text-xs font-semibold uppercase tracking-wider mb-1">Education</p>
+            <p class="text-muted text-sm">Pursue a PhD at a leading international institution in genetics or bioinformatics.</p>
+          </div>
+          <div class="glass rounded-lg p-4">
+            <p class="text-teal text-xs font-semibold uppercase tracking-wider mb-1">Impact</p>
+            <p class="text-muted text-sm">Help develop sustainable livestock systems that matter for food security globally.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     ACHIEVEMENTS SECTION
+     Edit: fill in placeholders when you have actual achievements
+     ================================================================ -->
+<section id="achievements" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Milestones</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Achievements</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- ACHIEVEMENT CARD — Edit or duplicate these -->
+      <div class="reveal glass rounded-xl p-6 card-hover">
+        <div class="text-2xl mb-3" aria-hidden="true">📄</div>
+        <h3 class="text-text font-semibold mb-1">Publications</h3>
+        <!-- EDIT: replace "Coming soon" with actual publications when available -->
+        <p class="text-muted text-sm italic">Coming soon — currently building toward my first manuscript.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.05s">
+        <div class="text-2xl mb-3" aria-hidden="true">🧫</div>
+        <h3 class="text-text font-semibold mb-1">Research Projects</h3>
+        <p class="text-muted text-sm italic">Undergraduate research projects in preparation.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.1s">
+        <div class="text-2xl mb-3" aria-hidden="true">🏅</div>
+        <h3 class="text-text font-semibold mb-1">Certifications</h3>
+        <p class="text-muted text-sm italic">Actively pursuing online certifications in bioinformatics and data science.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.15s">
+        <div class="text-2xl mb-3" aria-hidden="true">🏆</div>
+        <h3 class="text-text font-semibold mb-1">Awards &amp; Scholarships</h3>
+        <p class="text-muted text-sm italic">Actively preparing applications for international scholarships.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover" style="transition-delay:0.2s">
+        <div class="text-2xl mb-3" aria-hidden="true">🎤</div>
+        <h3 class="text-text font-semibold mb-1">Conferences &amp; Workshops</h3>
+        <p class="text-muted text-sm italic">Seeking opportunities to present and attend academic conferences.</p>
+      </div>
+
+      <div class="reveal glass rounded-xl p-6 card-hover border border-teal/15" style="transition-delay:0.25s">
+        <div class="text-2xl mb-3" aria-hidden="true">💼</div>
+        <h3 class="text-text font-semibold mb-1">Class Representative</h3>
+        <p class="text-muted text-sm">Elected as CR for my department, bridging students and faculty.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     BLOG SECTION
+     Edit: update post titles and descriptions.
+     Replace href="#" with actual blog post URLs when published.
+     ================================================================ -->
+<section id="blog" class="py-24 border-t border-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Ideas &amp; Reflections</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Blog</h2>
+      <p class="text-muted text-sm mt-3 max-w-xl mx-auto">Writing is how I think. These articles are in progress — check back soon.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- BLOG CARD — Edit title and description -->
+      <a href="#" class="reveal glass rounded-xl p-6 card-hover flex flex-col group" aria-label="Blog post: Why I Chose Animal Science">
+        <span class="chip self-start mb-4">Coming Soon</span>
+        <h3 class="text-text font-semibold mb-3 group-hover:text-teal transition-colors">
+          Why I Chose Animal Science
+        </h3>
+        <p class="text-muted text-sm leading-relaxed flex-1">
+          A personal reflection on the decision to study animal science and how it connects
+          to a larger vision of meaningful scientific work.
+        </p>
+        <span class="text-teal text-sm mt-5 font-medium group-hover:translate-x-1 transition-transform inline-block">Read soon →</span>
+      </a>
+
+      <a href="#" class="reveal glass rounded-xl p-6 card-hover flex flex-col group" style="transition-delay:0.05s" aria-label="Blog post: My Journey into Bioinformatics">
+        <span class="chip self-start mb-4">Coming Soon</span>
+        <h3 class="text-text font-semibold mb-3 group-hover:text-teal transition-colors">
+          My Journey into Bioinformatics
+        </h3>
+        <p class="text-muted text-sm leading-relaxed flex-1">
+          How a biology student begins learning to code — the tools, the frustration,
+          and the moments that make it worth it.
+        </p>
+        <span class="text-teal text-sm mt-5 font-medium group-hover:translate-x-1 transition-transform inline-block">Read soon →</span>
+      </a>
+
+      <a href="#" class="reveal glass rounded-xl p-6 card-hover flex flex-col group" style="transition-delay:0.1s" aria-label="Blog post: Learning Python from Scratch">
+        <span class="chip self-start mb-4">Coming Soon</span>
+        <h3 class="text-text font-semibold mb-3 group-hover:text-teal transition-colors">
+          Learning Python from Scratch
+        </h3>
+        <p class="text-muted text-sm leading-relaxed flex-1">
+          A beginner's honest account of picking up Python — resources, pitfalls, and
+          the first scripts that actually worked.
+        </p>
+        <span class="text-teal text-sm mt-5 font-medium group-hover:translate-x-1 transition-transform inline-block">Read soon →</span>
+      </a>
+
+      <a href="#" class="reveal glass rounded-xl p-6 card-hover flex flex-col group" style="transition-delay:0.15s" aria-label="Blog post: Books and Research Papers That Inspire Me">
+        <span class="chip self-start mb-4">Coming Soon</span>
+        <h3 class="text-text font-semibold mb-3 group-hover:text-teal transition-colors">
+          Books &amp; Papers That Inspire Me
+        </h3>
+        <p class="text-muted text-sm leading-relaxed flex-1">
+          A curated reading list of science books, papers, and ideas that have shaped
+          how I think about research and life.
+        </p>
+        <span class="text-teal text-sm mt-5 font-medium group-hover:translate-x-1 transition-transform inline-block">Read soon →</span>
+      </a>
+
+      <a href="#" class="reveal glass rounded-xl p-6 card-hover flex flex-col group" style="transition-delay:0.2s" aria-label="Blog post: Reflections on Research and Personal Growth">
+        <span class="chip self-start mb-4">Coming Soon</span>
+        <h3 class="text-text font-semibold mb-3 group-hover:text-teal transition-colors">
+          Reflections on Research &amp; Growth
+        </h3>
+        <p class="text-muted text-sm leading-relaxed flex-1">
+          Personal lessons from studying, failing, improving, and staying disciplined
+          when the results aren't visible yet.
+        </p>
+        <span class="text-teal text-sm mt-5 font-medium group-hover:translate-x-1 transition-transform inline-block">Read soon →</span>
+      </a>
+
+      <!-- Placeholder for future posts -->
+      <div class="reveal glass rounded-xl p-6 border-dashed border-border flex flex-col items-center justify-center text-center min-h-[160px]" style="transition-delay:0.25s">
+        <span class="text-3xl mb-3" aria-hidden="true">✍️</span>
+        <p class="text-muted text-sm">More articles coming soon.</p>
+        <p class="text-muted text-xs mt-1">Subscribe via contact.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     CONTACT SECTION
+     Edit: replace placeholder links with your actual URLs / emails
+     ================================================================ -->
+<section id="contact" class="py-24 border-t border-border">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="eyebrow mb-3">Get In Touch</p>
+      <h2 class="font-serif text-3xl sm:text-4xl text-text">Contact</h2>
+      <p class="text-muted text-sm mt-3 max-w-xl mx-auto">
+        Whether you're a researcher, collaborator, or someone who shares a curiosity about genetics
+        and computation — I'd love to hear from you.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal">
+
+      <!-- EMAIL — Edit: replace with your actual email -->
+      <a href="mailto:your.email@example.com"
+         class="glass rounded-xl p-6 card-hover flex items-center gap-4 group">
+        <div class="w-12 h-12 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-xl shrink-0" aria-hidden="true">
+          ✉️
+        </div>
+        <div>
+          <p class="text-text font-semibold text-sm group-hover:text-teal transition-colors">Email</p>
+          <!-- EDIT: Replace with your email -->
+          <p class="text-muted text-xs mt-0.5">your.email@example.com</p>
+        </div>
+      </a>
+
+      <!-- GITHUB — Edit: replace with your GitHub URL -->
+      <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer"
+         class="glass rounded-xl p-6 card-hover flex items-center gap-4 group">
+        <div class="w-12 h-12 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-xl shrink-0" aria-hidden="true">
+          🐙
+        </div>
+        <div>
+          <p class="text-text font-semibold text-sm group-hover:text-teal transition-colors">GitHub</p>
+          <!-- EDIT: Replace with your GitHub username -->
+          <p class="text-muted text-xs mt-0.5">github.com/yourusername</p>
+        </div>
+      </a>
+
+      <!-- LINKEDIN — Edit: replace with your LinkedIn URL -->
+      <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer"
+         class="glass rounded-xl p-6 card-hover flex items-center gap-4 group">
+        <div class="w-12 h-12 rounded-xl bg-sky/10 border border-sky/20 flex items-center justify-center text-sky text-xl shrink-0" aria-hidden="true">
+          💼
+        </div>
+        <div>
+          <p class="text-text font-semibold text-sm group-hover:text-sky transition-colors">LinkedIn</p>
+          <!-- EDIT: Replace with your LinkedIn handle -->
+          <p class="text-muted text-xs mt-0.5">linkedin.com/in/yourprofile</p>
+        </div>
+      </a>
+
+      <!-- GOOGLE SCHOLAR — Edit: replace with your Scholar URL -->
+      <a href="https://scholar.google.com/citations?user=YOURID" target="_blank" rel="noopener noreferrer"
+         class="glass rounded-xl p-6 card-hover flex items-center gap-4 group">
+        <div class="w-12 h-12 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-xl shrink-0" aria-hidden="true">
+          🎓
+        </div>
+        <div>
+          <p class="text-text font-semibold text-sm group-hover:text-teal transition-colors">Google Scholar</p>
+          <p class="text-muted text-xs mt-0.5">Scholar profile (coming soon)</p>
+        </div>
+      </a>
+
+      <!-- ORCID — Edit: replace with your ORCID URL -->
+      <a href="https://orcid.org/0000-0000-0000-0000" target="_blank" rel="noopener noreferrer"
+         class="glass rounded-xl p-6 card-hover flex items-center gap-4 group">
+        <div class="w-12 h-12 rounded-xl bg-sky/10 border border-sky/20 flex items-center justify-center text-sky text-xl shrink-0" aria-hidden="true">
+          🔬
+        </div>
+        <div>
+          <p class="text-text font-semibold text-sm group-hover:text-sky transition-colors">ORCID</p>
+          <p class="text-muted text-xs mt-0.5">ORCID iD (coming soon)</p>
+        </div>
+      </a>
+
+      <!-- CV Download -->
+      <a href="#" class="glass rounded-xl p-6 card-hover flex items-center gap-4 group border border-teal/15">
+        <div class="w-12 h-12 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center text-teal text-xl shrink-0" aria-hidden="true">
+          📄
+        </div>
+        <div>
+          <p class="text-text font-semibold text-sm group-hover:text-teal transition-colors">Curriculum Vitae</p>
+          <!-- EDIT: Replace href="#" above with your CV URL -->
+          <p class="text-muted text-xs mt-0.5">Download PDF</p>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     FOOTER
+     Edit: name, year, and tagline
+     ================================================================ -->
+<footer class="border-t border-border py-10">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <p class="font-serif text-teal text-xl mb-2">Promit Das</p>
+    <!-- Edit: the tagline under your name in the footer -->
+    <p class="text-muted text-sm italic mb-4">
+      "Curious minds, disciplined work, and meaningful research."
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center text-xs text-muted mb-6">
+      <a href="#home"       class="hover:text-teal transition-colors">Home</a>
+      <a href="#about"      class="hover:text-teal transition-colors">About</a>
+      <a href="#research"   class="hover:text-teal transition-colors">Research</a>
+      <a href="#projects"   class="hover:text-teal transition-colors">Projects</a>
+      <a href="#blog"       class="hover:text-teal transition-colors">Blog</a>
+      <a href="#contact"    class="hover:text-teal transition-colors">Contact</a>
+    </div>
+    <!-- Edit: update the year and name -->
+    <p class="text-muted text-xs">© 2026 Promit Das. All Rights Reserved.</p>
+  </div>
+</footer>
+
+
+<!-- ================================================================
+     JAVASCRIPT
+     (Scroll reveal, nav scroll effect, mobile menu, progress bars)
+     — No editing needed here unless you want to change behavior
+     ================================================================ -->
+<script>
+  // ── Nav background on scroll ──────────────────────────────────
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 30) {
+      navbar.classList.add('bg-navy/90', 'backdrop-blur-md', 'border-border');
+      navbar.classList.remove('border-transparent');
+    } else {
+      navbar.classList.remove('bg-navy/90', 'backdrop-blur-md', 'border-border');
+      navbar.classList.add('border-transparent');
+    }
+  }, { passive: true });
+
+  // ── Active nav link highlighting ───────────────────────────────
+  const sections = document.querySelectorAll('section[id], div[id="home"]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.35 });
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+
+  // ── Scroll reveal ──────────────────────────────────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── Progress bar animation ─────────────────────────────────────
+  const progObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.prog-bar-fill').forEach(bar => bar.classList.add('animated'));
+        progObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.prog-bar-bg').forEach(bg => progObserver.observe(bg.parentElement.parentElement));
+
+  // ── Mobile menu ────────────────────────────────────────────────
+  const menuBtn     = document.getElementById('menu-btn');
+  const closeBtn    = document.getElementById('close-btn');
+  const mobileNav   = document.getElementById('mobile-nav');
+  const overlay     = document.getElementById('mobile-overlay');
+
+  function openMenu() {
+    mobileNav.classList.add('open');
+    overlay.classList.remove('hidden');
+    mobileNav.setAttribute('aria-hidden', 'false');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileNav.classList.remove('open');
+    overlay.classList.add('hidden');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.addEventListener('click', closeMenu);
+
+  // Close mobile menu when a link is clicked
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // ── Smooth scroll offset for fixed nav ────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 56; // height of fixed nav in px
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
