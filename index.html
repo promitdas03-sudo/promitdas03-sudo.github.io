@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alex Rivera — Developer & Creator</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Space Grotesk + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            body:    ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            navy:   '#0D1117',
+            slate:  '#161B22',
+            border: '#21262D',
+            muted:  '#8B949E',
+            text:   '#E6EDF3',
+            amber:  '#F0A500',
+            'amber-dim': '#7A5200',
+          },
+          animation: {
+            blink: 'blink 1.1s step-end infinite',
+            'fade-up': 'fadeUp 0.6s ease both',
+          },
+          keyframes: {
+            blink:   { '0%,100%': { opacity: '1' }, '50%': { opacity: '0' } },
+            fadeUp:  { from: { opacity: '0', transform: 'translateY(18px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    body { background-color: #0D1117; color: #E6EDF3; font-family: 'Inter', sans-serif; }
+
+    /* Noise texture overlay for depth */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* Amber glow blob in hero */
+    .glow-blob {
+      position: absolute;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(240,165,0,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -100px; right: -60px;
+      pointer-events: none;
+    }
+
+    /* Cursor blink */
+    .cursor::after {
+      content: '|';
+      color: #F0A500;
+      animation: blink 1.1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    /* Card hover lift */
+    .project-card {
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(240,165,0,0.08);
+      border-color: #F0A500;
+    }
+
+    /* Nav link underline */
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 0; height: 1px;
+      background: #F0A500;
+      transition: width 0.2s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Section label */
+    .section-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #F0A500;
+    }
+
+    /* Skill tag */
+    .skill-tag {
+      font-size: 0.72rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(240,165,0,0.08);
+      border: 1px solid rgba(240,165,0,0.25);
+      color: #F0A500;
+    }
+
+    /* Scroll-triggered fade-up via IntersectionObserver */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+      .cursor::after { animation: none; }
+    }
+  </style>
+</head>
+
+<body class="relative z-10 antialiased">
+
+  <!-- ═══════════════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════════════ -->
+  <nav class="fixed top-0 inset-x-0 z-50 border-b border-border bg-navy/80 backdrop-blur-md">
+    <div class="max-w-5xl mx-auto px-6 flex items-center justify-between h-14">
+      <span class="font-display font-bold text-text tracking-tight">AR<span class="text-amber">.</span></span>
+      <div class="flex items-center gap-7 text-sm text-muted font-display font-medium">
+        <a href="#about"    class="nav-link hover:text-text transition-colors">About</a>
+        <a href="#projects" class="nav-link hover:text-text transition-colors">Projects</a>
+        <a href="#contact"  class="nav-link hover:text-text transition-colors">Contact</a>
+        <a href="https://github.com" target="_blank" rel="noopener"
+           class="px-3 py-1.5 rounded-md border border-border text-text hover:border-amber hover:text-amber transition-colors text-xs">
+          GitHub ↗
+        </a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════ -->
+  <header class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-14">
+    <div class="glow-blob"></div>
+    <div class="max-w-5xl mx-auto px-6 py-24 relative z-10">
+
+      <!-- Eyebrow -->
+      <p class="section-label mb-6 animate-fade-up" style="animation-delay:0.05s">
+        Hi, I'm
+      </p>
+
+      <!-- Name headline -->
+      <h1 class="font-display font-bold leading-none tracking-tight text-text mb-4
+                  text-[clamp(3rem,9vw,6.5rem)] animate-fade-up cursor" style="animation-delay:0.1s">
+        Alex Rivera
+      </h1>
+
+      <!-- Tagline -->
+      <p class="text-muted font-body text-lg md:text-xl max-w-xl leading-relaxed mb-10 animate-fade-up" style="animation-delay:0.18s">
+        Full-stack developer, open-source tinkerer, and lifelong learner based in San Francisco.
+        I build things for the web — and sometimes for fun.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-wrap gap-4 animate-fade-up" style="animation-delay:0.26s">
+        <a href="#projects"
+           class="px-6 py-3 rounded-lg bg-amber text-navy font-display font-semibold text-sm
+                  hover:bg-amber/90 transition-colors shadow-lg shadow-amber/10">
+          See my work
+        </a>
+        <a href="#contact"
+           class="px-6 py-3 rounded-lg border border-border text-text font-display font-medium text-sm
+                  hover:border-amber hover:text-amber transition-colors">
+          Get in touch
+        </a>
+      </div>
+
+      <!-- Floating stat bar -->
+      <div class="mt-20 flex flex-wrap gap-8 animate-fade-up" style="animation-delay:0.34s">
+        <div>
+          <p class="font-display text-2xl font-bold text-text">12+</p>
+          <p class="text-xs text-muted mt-0.5">Projects shipped</p>
+        </div>
+        <div class="w-px bg-border hidden sm:block"></div>
+        <div>
+          <p class="font-display text-2xl font-bold text-text">3 yrs</p>
+          <p class="text-xs text-muted mt-0.5">Coding experience</p>
+        </div>
+        <div class="w-px bg-border hidden sm:block"></div>
+        <div>
+          <p class="font-display text-2xl font-bold text-text">∞</p>
+          <p class="text-xs text-muted mt-0.5">Cups of coffee</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted animate-fade-up" style="animation-delay:0.5s">
+      <span class="text-xs font-display tracking-widest uppercase">Scroll</span>
+      <svg class="w-4 h-4 animate-bounce mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       ABOUT / BIO
+  ════════════════════════════════════════════════════ -->
+  <section id="about" class="py-24 border-t border-border">
+    <div class="max-w-5xl mx-auto px-6">
+
+      <div class="grid md:grid-cols-2 gap-16 items-start">
+        <!-- Left: Text -->
+        <div class="reveal">
+          <p class="section-label mb-4">About me</p>
+          <h2 class="font-display font-bold text-3xl md:text-4xl text-text leading-tight mb-6">
+            I turn ideas into<br/>
+            <span class="text-amber">working software.</span>
+          </h2>
+          <div class="space-y-4 text-muted text-[0.95rem] leading-relaxed">
+            <p>
+              I'm a self-taught developer with a background in design who fell in love with the web.
+              I enjoy the full journey — from sketching a wireframe to deploying the final build.
+            </p>
+            <p>
+              When I'm not coding, you'll find me hiking trails in the Bay Area, experimenting with
+              sourdough recipes, or deep-diving into retro video game history. I believe the best
+              engineers are curious about everything, not just code.
+            </p>
+            <p>
+              Currently open to freelance collaborations and interesting side projects.
+              Always happy to talk shop.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Skills -->
+        <div class="reveal" style="transition-delay:0.1s">
+          <p class="section-label mb-4">Skills &amp; tools</p>
+
+          <div class="space-y-5">
+            <div>
+              <p class="text-xs text-muted uppercase tracking-widest mb-2 font-display">Languages</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">HTML / CSS</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs text-muted uppercase tracking-widest mb-2 font-display">Frameworks</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">React</span>
+                <span class="skill-tag">Next.js</span>
+                <span class="skill-tag">Tailwind CSS</span>
+                <span class="skill-tag">Node.js</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs text-muted uppercase tracking-widest mb-2 font-display">Tools</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">Git / GitHub</span>
+                <span class="skill-tag">Figma</span>
+                <span class="skill-tag">VS Code</span>
+                <span class="skill-tag">Vercel</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Availability badge -->
+          <div class="mt-8 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-border bg-slate text-sm">
+            <span class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_6px_2px_rgba(74,222,128,0.5)]"></span>
+            <span class="font-display text-text text-xs font-medium">Available for freelance work</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       PROJECTS / HOBBIES GRID
+  ════════════════════════════════════════════════════ -->
+  <section id="projects" class="py-24 border-t border-border">
+    <div class="max-w-5xl mx-auto px-6">
+
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 reveal">
+        <div>
+          <p class="section-label mb-3">Selected work</p>
+          <h2 class="font-display font-bold text-3xl md:text-4xl text-text leading-tight">
+            Projects &amp; Passions
+          </h2>
+        </div>
+        <a href="https://github.com" target="_blank" rel="noopener"
+           class="text-sm text-muted font-display hover:text-amber transition-colors shrink-0">
+          All repos on GitHub ↗
+        </a>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Card 1 — Featured (full width on lg) -->
+        <a href="#" class="project-card sm:col-span-2 lg:col-span-2 group block
+                           rounded-xl border border-border bg-slate p-7 reveal"
+                    style="transition-delay:0.05s">
+          <div class="flex items-start justify-between mb-5">
+            <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-amber text-xl">
+              📋
+            </div>
+            <span class="text-xs text-amber font-display border border-amber/25 bg-amber/5 px-2 py-0.5 rounded">Featured</span>
+          </div>
+          <h3 class="font-display font-semibold text-text text-lg mb-2 group-hover:text-amber transition-colors">
+            TaskFlow — Kanban App
+          </h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">
+            A drag-and-drop project management tool built with React and localStorage.
+            Supports multiple boards, labels, and due dates — no backend needed.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Tailwind</span>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="#" class="project-card group block rounded-xl border border-border bg-slate p-7 reveal"
+                    style="transition-delay:0.1s">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-amber text-xl mb-5">
+            🌤️
+          </div>
+          <h3 class="font-display font-semibold text-text mb-2 group-hover:text-amber transition-colors">
+            Weather Dashboard
+          </h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">
+            Clean weather app using the Open-Meteo API with animated weather icons and a 7-day forecast.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">CSS Grid</span>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="#" class="project-card group block rounded-xl border border-border bg-slate p-7 reveal"
+                    style="transition-delay:0.15s">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-amber text-xl mb-5">
+            📝
+          </div>
+          <h3 class="font-display font-semibold text-text mb-2 group-hover:text-amber transition-colors">
+            Markdown Blog Engine
+          </h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">
+            A static blog generator that converts Markdown files into beautiful HTML pages — runs entirely in Python.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Jinja2</span>
+          </div>
+        </a>
+
+        <!-- Card 4 — Hobby -->
+        <a href="#" class="project-card group block rounded-xl border border-border bg-slate p-7 reveal"
+                    style="transition-delay:0.2s">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-amber text-xl mb-5">
+            🎮
+          </div>
+          <h3 class="font-display font-semibold text-text mb-2 group-hover:text-amber transition-colors">
+            Retro Game Collector
+          </h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">
+            Personal collection tracker for vintage cartridges with a rating system and rarity lookup.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="skill-tag">Next.js</span>
+            <span class="skill-tag">Supabase</span>
+          </div>
+        </a>
+
+        <!-- Card 5 — Hobby -->
+        <a href="#" class="project-card group block rounded-xl border border-border bg-slate p-7 reveal"
+                    style="transition-delay:0.25s">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-amber text-xl mb-5">
+            🥾
+          </div>
+          <h3 class="font-display font-semibold text-text mb-2 group-hover:text-amber transition-colors">
+            Trail Log
+          </h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">
+            A personal hiking journal with GPX upload support and elevation chart visualization using D3.js.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="skill-tag">D3.js</span>
+            <span class="skill-tag">Leaflet</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       CONTACT / FOOTER
+  ════════════════════════════════════════════════════ -->
+  <footer id="contact" class="py-24 border-t border-border">
+    <div class="max-w-5xl mx-auto px-6">
+
+      <div class="reveal text-center max-w-xl mx-auto mb-14">
+        <p class="section-label mb-4">Contact</p>
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-text leading-tight mb-4">
+          Let's build something<br/>
+          <span class="text-amber">together.</span>
+        </h2>
+        <p class="text-muted text-[0.95rem] leading-relaxed">
+          Whether you have a project in mind, a question about my work, or just want to
+          say hello — my inbox is always open.
+        </p>
+      </div>
+
+      <!-- Contact cards -->
+      <div class="grid sm:grid-cols-3 gap-4 mb-16 reveal" style="transition-delay:0.1s">
+
+        <a href="mailto:alex@example.com"
+           class="project-card flex flex-col items-center gap-3 rounded-xl border border-border bg-slate p-6 text-center group">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-lg">
+            ✉️
+          </div>
+          <div>
+            <p class="font-display font-semibold text-text text-sm group-hover:text-amber transition-colors">Email</p>
+            <p class="text-muted text-xs mt-0.5">alex@example.com</p>
+          </div>
+        </a>
+
+        <a href="https://github.com" target="_blank" rel="noopener"
+           class="project-card flex flex-col items-center gap-3 rounded-xl border border-border bg-slate p-6 text-center group">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-lg">
+            🐙
+          </div>
+          <div>
+            <p class="font-display font-semibold text-text text-sm group-hover:text-amber transition-colors">GitHub</p>
+            <p class="text-muted text-xs mt-0.5">github.com/alexrivera</p>
+          </div>
+        </a>
+
+        <a href="https://linkedin.com" target="_blank" rel="noopener"
+           class="project-card flex flex-col items-center gap-3 rounded-xl border border-border bg-slate p-6 text-center group">
+          <div class="w-10 h-10 rounded-lg bg-amber/10 border border-amber/20 flex items-center justify-center text-lg">
+            💼
+          </div>
+          <div>
+            <p class="font-display font-semibold text-text text-sm group-hover:text-amber transition-colors">LinkedIn</p>
+            <p class="text-muted text-xs mt-0.5">linkedin.com/in/alexrivera</p>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted font-display">
+        <span>© 2025 Alex Rivera. Built with HTML, Tailwind CSS &amp; GitHub Pages.</span>
+        <div class="flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+          <span>Deployed on GitHub Pages</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       SCROLL REVEAL SCRIPT
+  ════════════════════════════════════════════════════ -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
